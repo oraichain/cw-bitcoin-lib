@@ -65,7 +65,7 @@ mod tests {
         let pubkey: Binary = app
             .query(
                 addr.clone(),
-                &QueryMsg::GetDerivePubkey {
+                &QueryMsg::AddExpTweak {
                     pubkey: Binary::from([
                         2, 136, 145, 243, 107, 105, 26, 64, 3, 111, 43, 62, 203, 23, 193, 55, 128,
                         169, 50, 80, 62, 242, 195, 159, 63, 174, 217, 185, 91, 247, 30, 162, 127,
