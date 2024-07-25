@@ -38,4 +38,5 @@ libsecp256k1-core = "0.3.0"
 
 [dev-dependencies]
 getrandom = { version = "0.2", features = ["js"] }
+bitcoin = { version = "0.29.2" }
 cosmwasm-testing-util = { git = "https://github.com/oraichain/cosmwasm-testing-util.git", rev = "ed58567" }

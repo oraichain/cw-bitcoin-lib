@@ -35,6 +35,7 @@ pub fn query(_: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
 #[cfg(test)]
 mod tests {
 
+    use bitcoin::util::bip32::ChildNumber;
     use cosmwasm_std::Addr;
     use cosmwasm_std::Binary;
     use cosmwasm_std::Empty;
@@ -42,6 +43,8 @@ mod tests {
     use cosmwasm_testing_util::MockApp;
 
     use crate::msg::QueryMsg;
+    use bitcoin::util::bip32::{ExtendedPrivKey, ExtendedPubKey};
+    use bitcoin::{secp256k1, Network};
 
     #[test]
     fn test_init() {
@@ -62,22 +65,31 @@ mod tests {
             )
             .unwrap();
 
-        let pubkey: Binary = app
+        let secp = secp256k1::Secp256k1::new();
+        let network = Network::Bitcoin;
+        let xpriv = ExtendedPrivKey::new_master(network, &[0]).unwrap();
+
+        let xpub = ExtendedPubKey::from_priv(&secp, &xpriv);
+        let pubkey_bytes = Binary::from(&xpub.public_key.serialize());
+        let child = ChildNumber::from_normal_idx(1).unwrap();
+
+        let (sk, _) = xpub.ckd_pub_tweak(child).unwrap();
+        let secret_bytes = Binary::from(sk.secret_bytes());
+
+        let pubkey = xpub.derive_pub(&secp, &[child]).unwrap().public_key;
+
+        let pubkey_bytes: Binary = app
             .query(
                 addr.clone(),
                 &QueryMsg::AddExpTweak {
-                    pubkey: Binary::from([
-                        2, 136, 145, 243, 107, 105, 26, 64, 3, 111, 43, 62, 203, 23, 193, 55, 128,
-                        169, 50, 80, 62, 242, 195, 159, 63, 174, 217, 185, 91, 247, 30, 162, 127,
-                    ]),
-                    secret: Binary::from([
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 0, 1,
-                    ]),
+                    pubkey: pubkey_bytes,
+                    secret: secret_bytes,
                 },
             )
             .unwrap();
 
-        println!("pubkey :{:?}", pubkey.as_slice());
+        let pubkey_ret = secp256k1::PublicKey::from_slice(&pubkey_bytes).unwrap();
+
+        assert_eq!(pubkey_ret, pubkey);
     }
 }
