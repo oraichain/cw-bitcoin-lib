@@ -4,7 +4,7 @@ use cosmwasm_std::entry_point;
 use crate::{
     add_exp_tweak,
     error::{ContractError, ContractResult},
-    msg::{InstantiateMsg, QueryMsg},
+    msg::QueryMsg,
 };
 
 use cosmwasm_std::{
@@ -16,7 +16,7 @@ pub fn instantiate(
     _deps: DepsMut,
     _env: Env,
     _: MessageInfo,
-    _: InstantiateMsg,
+    _: Empty,
 ) -> Result<Response, ContractError> {
     Ok(Response::default())
 }
@@ -47,10 +47,10 @@ mod tests {
 
     use cosmwasm_std::Addr;
     use cosmwasm_std::Binary;
+    use cosmwasm_std::Empty;
     use cosmwasm_testing_util::ContractWrapper;
     use cosmwasm_testing_util::MockApp;
 
-    use crate::msg::InstantiateMsg;
     use crate::msg::QueryMsg;
 
     #[test]
@@ -66,7 +66,7 @@ mod tests {
             .instantiate(
                 code_id,
                 Addr::unchecked("alice"),
-                &InstantiateMsg {},
+                &Empty {},
                 &[],
                 "cw-bitcoin-lib",
             )
