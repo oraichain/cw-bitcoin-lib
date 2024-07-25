@@ -5,5 +5,5 @@ use cosmwasm_std::Binary;
 #[derive(QueryResponses)]
 pub enum QueryMsg {
     #[returns(Binary)]
-    GetDerivePubkey { pubkey: Binary, secret: Binary },
+    AddExpTweak { pubkey: Binary, secret: Binary },
 }

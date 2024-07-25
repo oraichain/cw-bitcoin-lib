@@ -1,11 +1,7 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 
-use crate::{
-    add_exp_tweak,
-    error::{ContractError, ContractResult},
-    msg::QueryMsg,
-};
+use crate::{add_exp_tweak, error::ContractError, msg::QueryMsg};
 
 use cosmwasm_std::{
     to_json_binary, Binary, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdResult,
@@ -29,17 +25,11 @@ pub fn execute(_: DepsMut, _env: Env, _info: MessageInfo, _msg: Empty) -> StdRes
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(_: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetDerivePubkey { pubkey, secret } => {
-            to_json_binary(&get_derive_pubkey(pubkey, secret)?)
-        }
+        QueryMsg::AddExpTweak { pubkey, secret } => to_json_binary(&add_exp_tweak(
+            &pubkey.as_slice().try_into().unwrap(),
+            &secret.as_slice().try_into().unwrap(),
+        )?),
     }
-}
-
-fn get_derive_pubkey(pubkey: Binary, secret: Binary) -> ContractResult<Binary> {
-    add_exp_tweak(
-        &pubkey.as_slice().try_into().unwrap(),
-        &secret.as_slice().try_into().unwrap(),
-    )
 }
 
 #[cfg(test)]
