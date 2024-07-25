@@ -1,1 +1,1 @@
-## Bitcoin trustless bridge implemented in CosmWasm contract facilitating taproot bitcoin script.
+## Bitcoin secp256k1 extension in pure Rust as contract libs.
