@@ -1,0 +1,38 @@
+[package]
+name = "cw-bitcoin-lib"
+resolver = '2'
+authors = ["Oraichain Labs"]
+documentation = "https://github.com/oraichain/cw-bitcoin-lib.git"
+edition = "2021"
+exclude = [
+    # Those files are rust-optimizer artifacts. You might want to commit them for convenience but they should not be part of the source code publication.
+    "contract.wasm",
+    "hash.txt",
+]
+homepage = "https://orai.io"
+license = "MIT"
+repository = "https://github.com/oraichain/cw-bitcoin-lib.git"
+version = "0.1.0"
+
+[profile.release]
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = false
+lto = true
+opt-level = 3
+overflow-checks = true
+panic = 'abort'
+rpath = false
+
+[dependencies]
+cosmwasm-schema = { version = "1.5" }
+cosmwasm-std = { version = "1.5" }
+thiserror = "1.0.26"
+arrayref = "0.3"
+libsecp256k1 = { version = "0.7.1", default-features = false }
+libsecp256k1-core = "0.3.0"
+
+[dev-dependencies]
+getrandom = { version = "0.2", features = ["js"] }
+cosmwasm-testing-util = { git = "https://github.com/oraichain/cosmwasm-testing-util.git", rev = "ed58567" }
